@@ -20,25 +20,14 @@ struct segtree
 		add[v * 2 + 1] += add[v];
 		add[v] = 0; 
 	}
-	void buildmin(int v, int tl, int tr){
-		if(tl == tr){
+	void build(int v, int tl, int tr){
+		if(tl == tr)
 			T[v] = a[tl];
-		}
 		else{
 			int tm = tl + tr >> 1;
-			buildmin(2 * v, tl, tm);
-			buildmin(2 * v + 1, tm + 1, tr);
-			T[v] = min(T[v * 2], T[v * 2 + 1]);
-		}
-	}
-	void buildmax(int v, int tl, int tr){
-		if(tl == tr) {
-			T[v] = a[tl];
-		}
-		else{
-			int tm = tl + tr >> 1;
-			buildmax(2 * v, tl, tm);
-			buildmax(2 * v + 1, tm + 1, tr);
+			build(2 * v, tl, tm);
+			build(2 * v + 1, tm + 1, tr);
+			T[v] = merge(T[v * 2], T[v * 2 + 1]);
 		}
 	}
 	void updval(int v, int tl, int tr, int pos, int val){
@@ -64,9 +53,7 @@ struct segtree
 		T[v] = merge(T[v * 2], T[v * 2 + 1]);
 	}
 	long long get(int v, int tl, int tr, int l, int r){
-		if(l <= tl && tr <= r){
-			return T[v];
-		}
+		if(l <= tl && tr <= r) return T[v];
 		if(l > tr || r < tl) return 0;
 		push(v);
 		int tm = tl + tr >> 1;
